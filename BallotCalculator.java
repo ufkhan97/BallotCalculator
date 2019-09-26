@@ -6,8 +6,10 @@ import java.util.Scanner;
 import java.util.Arrays;
 
 public class BallotCalculator {
-	// TODO: Ask for and Store Input: 2 sets of 14 integers (1 set per team, 1 integer per trial section) 
-	// TODO: For each team, find the SUM of their score. Calculate and output the winning team and point differential.
+	// DONE: Ask for and Store Input: 2 sets of 14 integers (1 set per team, 1 integer per trial section) 
+	// DONE: For each team, find the SUM of their score. Calculate and output the winning team and point differential.
+	// TODO: Make sure only input between 1-10 
+	// TODO: GUI that resembles AMTA ballot
 	public static void main(String[] args) {
 		int[] piTeam = new int[14];
 		int[] deTeam = new int[14];
@@ -85,6 +87,7 @@ public class BallotCalculator {
 		int piSum = findSum(piTeam);
 		int deSum = findSum(deTeam);
 		
+		System.out.println();
 		System.out.println("P Team scored: " + Arrays.toString(piTeam));
 		System.out.println("P Team total: " + piSum );
 		System.out.println("D Team scored: " + Arrays.toString(deTeam));
