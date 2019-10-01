@@ -6,11 +6,9 @@
 // Centered at the bottom will be a "Calculate!" button. Upon clicking, it should open results pane below it displaying the winning team and point differential. 
 // GUI should be able to accept input changes and recalculate if button clicked again. 
 
-//TODO: Add other 12 ballot sections on each side. Surely, there is a more efficient way to code this than copy/paste?
+//DONE: Add other 12 ballot sections on each side. 
 
-//TODO: Input filtering. Only accept int inputs between 1 and 10. If other value typed in, reject and ask for another input
-
-//TODO: If 'calculate' button clicked when all inputs not an int between 1 and 10: reject and ask for complete, valid input. 
+//TODO: Input filtering. Only accept int inputs between 1 and 10. If 'calculate' button clicked when all inputs not an int between 1 and 10: reject and ask for complete, valid input. 
 
 //TODO: Make the GUI pretty in general. Cleaner layout and more readable (i.e bigger) text are priorities.
 
@@ -21,12 +19,10 @@ import javax.swing.*;
 
 public class GraphicBallotCalculator {
 	
-	public static JTextField piOpen;
-	public static JTextField piDirect1;
+	public static JTextField[] piScores;
 	public static JTextField piResult;
 	
-	public static JTextField deOpen;
-	public static JTextField deDirect1;
+	public static JTextField[] deScores;
 	public static JTextField deResult;
 	
 	public static JButton calcButton;
@@ -43,17 +39,43 @@ public class GraphicBallotCalculator {
 		f.getContentPane().add(header, "North");
 		
 		//PI (plaintiff/ prosecution)
-		piOpen = new JTextField(10);
-		piDirect1 = new JTextField(10);
+		piScores = new JTextField[14];
+		for(int i = 0; i < 14; i++) {
+			piScores[i] = new JTextField(5);
+		}
 		piResult = new JTextField(20);
 		piResult.setEditable(false);
 		
 		JPanel piScorePanel = new JPanel();
-		piScorePanel.setLayout(new GridLayout(2,2));
-		piScorePanel.add(new JLabel("P Open Score:"));
-		piScorePanel.add(piOpen);
+		piScorePanel.setLayout(new GridLayout(14,2));
+		piScorePanel.add(new JLabel("P Opening Score:"));
+		piScorePanel.add(piScores[0]);
 		piScorePanel.add(new JLabel("P Attorney 1 Direct Score:"));
-		piScorePanel.add(piDirect1);
+		piScorePanel.add(piScores[1]);
+		piScorePanel.add(new JLabel("P Witness 1 Direct Score:"));
+		piScorePanel.add(piScores[2]);
+		piScorePanel.add(new JLabel("P Witness 1 Cross Score:"));
+		piScorePanel.add(piScores[3]);
+		piScorePanel.add(new JLabel("P Attorney 2 Direct Score:"));
+		piScorePanel.add(piScores[4]);
+		piScorePanel.add(new JLabel("P Witness 2 Direct Score:"));
+		piScorePanel.add(piScores[5]);
+		piScorePanel.add(new JLabel("P Witness 2 Cross Score:"));
+		piScorePanel.add(piScores[6]);
+		piScorePanel.add(new JLabel("P Attorney 3 Direct Score:"));
+		piScorePanel.add(piScores[7]);
+		piScorePanel.add(new JLabel("P Witness 3 Direct Score:"));
+		piScorePanel.add(piScores[8]);
+		piScorePanel.add(new JLabel("P Witness 3 Cross Score:"));
+		piScorePanel.add(piScores[9]);
+		piScorePanel.add(new JLabel("P Attorney 1 Cross Score:"));
+		piScorePanel.add(piScores[10]);
+		piScorePanel.add(new JLabel("P Attorney 2 Cross Score:"));
+		piScorePanel.add(piScores[11]);
+		piScorePanel.add(new JLabel("P Attorney 3 Cross Score:"));
+		piScorePanel.add(piScores[12]);
+		piScorePanel.add(new JLabel("P Closing Score:"));
+		piScorePanel.add(piScores[13]);
 		
 		JPanel piResultPanel = new JPanel();
 		piResultPanel.add(new JLabel("Sum: "));
@@ -67,17 +89,43 @@ public class GraphicBallotCalculator {
 		f.getContentPane().add(piPanel, "West");
 		
 		//DE (Defense)
-		deOpen = new JTextField(10);
-		deDirect1 = new JTextField(10);
+		deScores = new JTextField[14];
+		for(int i = 0; i < 14; i++) {
+			deScores[i] = new JTextField(5);
+		}
 		deResult = new JTextField(20);
 		deResult.setEditable(false);
 		
 		JPanel deScorePanel = new JPanel();
-		deScorePanel.setLayout(new GridLayout(2,2));
-		deScorePanel.add(new JLabel("D Open Score:"));
-		deScorePanel.add(deOpen);
+		deScorePanel.setLayout(new GridLayout(14,2));
+		deScorePanel.add(new JLabel("D Opening Score:"));
+		deScorePanel.add(deScores[0]);
+		deScorePanel.add(new JLabel("D Attorney 1 Cross Score:"));
+		deScorePanel.add(deScores[1]);
+		deScorePanel.add(new JLabel("D Attorney 2 Cross Score:"));
+		deScorePanel.add(deScores[2]);
+		deScorePanel.add(new JLabel("D Attorney 3 Cross Score:"));
+		deScorePanel.add(deScores[3]);
 		deScorePanel.add(new JLabel("D Attorney 1 Direct Score:"));
-		deScorePanel.add(deDirect1);
+		deScorePanel.add(deScores[4]);
+		deScorePanel.add(new JLabel("D Witness 1 Direct Score:"));
+		deScorePanel.add(deScores[5]);
+		deScorePanel.add(new JLabel("D Witness 1 Cross Score:"));
+		deScorePanel.add(deScores[6]);
+		deScorePanel.add(new JLabel("D Attorney 2 Direct Score:"));
+		deScorePanel.add(deScores[7]);
+		deScorePanel.add(new JLabel("D Witness 2 Direct Score:"));
+		deScorePanel.add(deScores[8]);
+		deScorePanel.add(new JLabel("D Witness 2 Cross Score:"));
+		deScorePanel.add(deScores[9]);
+		deScorePanel.add(new JLabel("D Attorney 3 Direct Score:"));
+		deScorePanel.add(deScores[10]);
+		deScorePanel.add(new JLabel("D Witness 3 Direct Score:"));
+		deScorePanel.add(deScores[11]);
+		deScorePanel.add(new JLabel("D Witness 3 Cross Score:"));
+		deScorePanel.add(deScores[12]);
+		deScorePanel.add(new JLabel("D Closing Score:"));
+		deScorePanel.add(deScores[13]);
 		
 		JPanel deResultPanel = new JPanel();
 		deResultPanel.add(new JLabel("Sum: "));
@@ -110,30 +158,29 @@ public class GraphicBallotCalculator {
 		f.getContentPane().add(footer, "South");
 		
 		//GENERAL 1
-		f.setSize(800,800);
+		f.setSize(700,800);
 		f.setVisible(true);
 	}
 	
 	public static class ButtonListener implements ActionListener{
 		public void actionPerformed(ActionEvent event) {
-			int piSum = 0;
 			String input;
 			int inputNum;
-			input = piOpen.getText();
-			inputNum = Integer.parseInt(input);
-			piSum += inputNum;
-			input = piDirect1.getText();
-			inputNum = Integer.parseInt(input);
-			piSum += inputNum;
+			
+			int piSum = 0;
+			for(int i=0; i < piScores.length; i++) {
+				input = piScores[i].getText();
+				inputNum = Integer.parseInt(input);
+				piSum += inputNum;
+			}
 			piResult.setText("" + piSum);
 			
 			int deSum = 0;
-			input = deOpen.getText();
-			inputNum = Integer.parseInt(input);
-			deSum += inputNum;
-			input = deDirect1.getText();
-			inputNum = Integer.parseInt(input);
-			deSum += inputNum;
+			for(int i=0; i < deScores.length; i++) {
+				input = deScores[i].getText();
+				inputNum = Integer.parseInt(input);
+				deSum += inputNum;
+			}
 			deResult.setText("" + deSum);
 			
 			if(piSum == deSum) {
