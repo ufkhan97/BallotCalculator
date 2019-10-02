@@ -1,16 +1,21 @@
-// Accepts AMTA Ballot input and outputs which team won and by how many points (Point Differential)
+//Last updated: 10/2/2019
+// This project is functionally complete, but aesthetically incomplete. In other words, it does everything I want it to do but doesn't look the way I want.   
+
+// Accepts input resembling an AMTA ballot and outputs which team won and by how many points (Point Differential)
 // AMTA: American Mock Trial Association, a collegiate organization where two teams compete head-to-head and are assigned numeric scores by judges. Each judge assigns 14 numeric scores to each team. Each of those 14 scores is for a different part of the trial (for example: opening statements, direct examination, cross examination, closing statement)
 // The winning team is the one with highest score, when summed across all 14 parts of trial
 
 // Graphic should show Instructions centered at top then two columns below it. Left column is piTeam, right column is DeTeam. Each column should have 14 labeled input spots for the scores for each trial.
-// Centered at the bottom will be a "Calculate!" button. Upon clicking, it should open results pane below it displaying the winning team and point differential. 
+// Centered at the bottom will be a "Calculate!" button. Upon clicking, the button will trigger the program to calculate and display the winning team and point differential. 
 // GUI should be able to accept input changes and recalculate if button clicked again. 
 
-//DONE: Add other 12 ballot sections on each side. 
+//DONE: Add all ballot sections on each side. 
 
-//TODO: Input filtering. Only accept int inputs between 1 and 10. If 'calculate' button clicked when all inputs not an int between 1 and 10: reject and ask for complete, valid input. 
+//DONE: Input filtering. Only accept int inputs between 1 and 10. If 'calculate' button clicked when all inputs not an int between 1 and 10: reject and ask for complete, valid input. SOLVED BY USING JSPINNER
 
 //TODO: Make the GUI pretty in general. Cleaner layout and more readable (i.e bigger) text are priorities.
+
+//TODO: Pi and De are both doing essentially the same thing. Must be a way to write the code once instead of twice? But also the labels for each score need hardcoding?
 
 
 import java.awt.*;
@@ -19,33 +24,48 @@ import javax.swing.*;
 
 public class GraphicBallotCalculator {
 	
-	public static JTextField[] piScores;
+	public static JSpinner[] piScores;
 	public static JTextField piResult;
 	
-	public static JTextField[] deScores;
+	public static JSpinner[] deScores;
 	public static JTextField deResult;
 	
 	public static JButton calcButton;
 	public static JTextField result;
 	
 	public static void main(String[] args) {
-		//GENERAL 0
+		
+		//LOOK AND FEEL
+		//Will cause the UI to mimic the look and feel of whatever system it is running on. 
+		try { 
+		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		
+		
+		//GENERAL
+		//
 		JFrame f = new JFrame("Graphic Ballot Calculator");
-		f.getContentPane().setLayout(new BorderLayout());
+		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		f.getContentPane().setLayout(new BorderLayout()); //Consider switching to Grid Bag
 		
 		//HEADER
 		JPanel header = new JPanel();
-		header.add(new JLabel("Instructions: Please enter a whole number between 1 and 10 for every score."));
+		header.add(new JLabel("Instructions: Please use the arrow keys to select a number between 1 and 10 for each score."));
 		f.getContentPane().add(header, "North");
 		
 		//PI (plaintiff/ prosecution)
-		piScores = new JTextField[14];
+		//Each score field will be represented by a JSpinner which allows inputs between 1 and 10, starting at 5
+		piScores = new JSpinner[14];
 		for(int i = 0; i < 14; i++) {
-			piScores[i] = new JTextField(5);
+			piScores[i] =  new JSpinner(new SpinnerNumberModel(5,1,10,1));
+			piScores[i].setEditor(new JSpinner.DefaultEditor(piScores[i]));
 		}
-		piResult = new JTextField(20);
+		piResult = new JTextField(20); //for displaying sum of piScores
 		piResult.setEditable(false);
 		
+		//Add all pi Scoring sections
 		JPanel piScorePanel = new JPanel();
 		piScorePanel.setLayout(new GridLayout(14,2));
 		piScorePanel.add(new JLabel("P Opening Score:"));
@@ -81,17 +101,19 @@ public class GraphicBallotCalculator {
 		piResultPanel.add(new JLabel("Sum: "));
 		piResultPanel.add(piResult);
 		
+		//put pi on the west or left side of window
 		JPanel piPanel = new JPanel();
-		piPanel.setLayout(new GridLayout(3,1));
-		piPanel.add(new JLabel("Prosecution"));
+		piPanel.setLayout(new GridLayout(2,1));
 		piPanel.add(piScorePanel);
 		piPanel.add(piResultPanel);
 		f.getContentPane().add(piPanel, "West");
 		
 		//DE (Defense)
-		deScores = new JTextField[14];
+		//Does the same things as the pi section above
+		deScores = new JSpinner[14];
 		for(int i = 0; i < 14; i++) {
-			deScores[i] = new JTextField(5);
+			deScores[i] = new JSpinner(new SpinnerNumberModel(5,1,10,1));
+			deScores[i].setEditor(new JSpinner.DefaultEditor(deScores[i]));
 		}
 		deResult = new JTextField(20);
 		deResult.setEditable(false);
@@ -131,58 +153,52 @@ public class GraphicBallotCalculator {
 		deResultPanel.add(new JLabel("Sum: "));
 		deResultPanel.add(deResult);
 		
+		//Put Defense on the east or right side of window
 		JPanel dePanel = new JPanel();
-		dePanel.setLayout(new GridLayout(3,1));
-		dePanel.add(new JLabel("Defense"));
+		dePanel.setLayout(new GridLayout(2,1));
 		dePanel.add(deScorePanel);
 		dePanel.add(deResultPanel);
-		f.getContentPane().add(dePanel, "East");		
+		f.getContentPane().add(dePanel, "East");	
 		
 		
 		//FOOTER
 		calcButton = new JButton("Calculate");
-		result = new JTextField(50);
+		result = new JTextField(50); //For displaying winning team and point differential
 		result.setEditable(false);
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(calcButton);
-		calcButton.addActionListener(new ButtonListener());
+		calcButton.addActionListener(new ButtonListener()); //Triggered when clicked
 		
 		JPanel resultPanel = new JPanel();
 		resultPanel.add(result);
-		
+	
+		//Puts Footer on the bottom, centered
 		JPanel footer = new JPanel();
 		footer.setLayout(new GridLayout(2,1));
 		footer.add(buttonPanel);
 		footer.add(resultPanel);
 		f.getContentPane().add(footer, "South");
 		
-		//GENERAL 1
-		f.setSize(700,800);
+		
+		
+		//GENERAL
+		//Sets initial window size and visibility 
+		f.setSize(800,1000);
 		f.setVisible(true);
 	}
 	
+	
 	public static class ButtonListener implements ActionListener{
+		
 		public void actionPerformed(ActionEvent event) {
-			String input;
-			int inputNum;
-			
-			int piSum = 0;
-			for(int i=0; i < piScores.length; i++) {
-				input = piScores[i].getText();
-				inputNum = Integer.parseInt(input);
-				piSum += inputNum;
-			}
+			//Find and display sums for each team
+			int piSum = sumScores(piScores);
 			piResult.setText("" + piSum);
-			
-			int deSum = 0;
-			for(int i=0; i < deScores.length; i++) {
-				input = deScores[i].getText();
-				inputNum = Integer.parseInt(input);
-				deSum += inputNum;
-			}
+			int deSum = sumScores(deScores);
 			deResult.setText("" + deSum);
 			
+			//Output Result
 			if(piSum == deSum) {
 				result.setText("*** The ballot is a tie! ***");
 			}else if(piSum > deSum){
@@ -191,6 +207,17 @@ public class GraphicBallotCalculator {
 				result.setText("*** The D team wins by " + (deSum - piSum) + " point(s)! ***");
 			}
 		}	
+		
+		public static int sumScores(JSpinner[] scores) {
+			//Calculates sum for a given team's score array
+			int sum = 0;
+			for(int i=0; i < scores.length; i++) {
+				sum += (Integer) scores[i].getValue();
+			}
+			return sum;
+		}
+		
 	}
 
+	
 }
